@@ -7,5 +7,7 @@
 class panoSet{
     public:
         vector<Mat> images;
+        int loadImages(std::vector<string> filenames);
+        int stitch();
     private:
 };
