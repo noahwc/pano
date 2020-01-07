@@ -3,6 +3,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <filesystem>
+
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
@@ -28,8 +30,25 @@ int main(int argc, char** argv )
     }
 
     if(imageset.loadImages(args["--images"]); == -1){
+        std::cout << "Failed to load image(s)";
         return EXIT_FAILURE;
     }
 
-    return 0;
+    if(!args.find("--out")){
+        args["--out"] == "./";
+    }
+
+    current_pano.loadOutPath(args["--out"]);
+
+    int stitch_result = current_pano.stitch(args)
+
+    if(stitch_result){
+        std::cout << "Successfully stitched images and output result to: " << args["--out"] << endl;
+    }
+    else{
+        std::cout << "Failed to stitch images with error: " << stitch_result << endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
