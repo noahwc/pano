@@ -6,6 +6,9 @@
 
 
 class panoSet{
+    private:
+        std::string output_location;
+        std::vector<cv::Mat> images;
     public:
         panoSet();
         int loadImages(std::vector<std::string> filenames);
@@ -13,7 +16,4 @@ class panoSet{
         int loadOutPath(std::string path);
         int exportPano();
         std::string getOutLocation();
-    private:
-        std::string output_location;
-        std::vector<cv::Mat> images;
 };
