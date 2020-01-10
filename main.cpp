@@ -3,25 +3,23 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <filesystem>
+#include "include/panoSet.hpp"
 
 #include <opencv2/opencv.hpp>
-
-using namespace cv;
 
 int main(int argc, char** argv )
 {
 
     panoSet current_pano;
 
-    std:map<std:string, std::vector<std::string> > args;
+    std::map<std::string, std::vector<std::string> >  args;
 
-    for(i = 1; i < argc; i++){
-        if(argv[i][0] == "-"){
+    for(int i = 1; i < argc; i++){
+        if(argv[i][0] == '-'){
             std::string flag = argv[i];
             while(i < argc){
                 args[flag].push_back(argv[i]);
-                if(++i < argc && argv[i][0] != "-"){ // Check if at the next flag.
+                if(++i < argc && argv[i][0] != '-'){ // Check if at the next flag.
                     i--;
                     break;
                 }
@@ -29,26 +27,28 @@ int main(int argc, char** argv )
         }
     }
 
-    if(imageset.loadImages(args["--images"]); == -1){
+    if(current_pano.loadImages(args["--images"]) == -1){
         std::cout << "Failed to load image(s)";
         return EXIT_FAILURE;
     }
 
-    if(!args.find("--out")){
-        args["--out"] == "./";
+    if(!args.count("--out")){
+        args["--out"].push_back("./");
     }
+    current_pano.loadOutPath(args["--out"][0]);
 
-    current_pano.loadOutPath(args["--out"]);
-
-    int stitch_result = current_pano.stitch(args)
-
+    int stitch_result = current_pano.stitch();
     if(stitch_result){
-        std::cout << "Successfully stitched images and output result to: " << args["--out"] << endl;
-    }
-    else{
-        std::cout << "Failed to stitch images with error: " << stitch_result << endl;
+        std::cout << "Failed to stitch images with error: " << stitch_result << std::endl;
         return EXIT_FAILURE;
     }
 
+    int export_result = current_pano.exportPano();
+    if(export_result){
+        std::cout << "Failed export image with error: " << export_result << std::endl;
+        return EXIT_FAILURE;
+    }
+    
+    std::cout << "Successfully stitched images and exported resulting image to: " << current_pano.getOutLocation() << std::endl;
     return EXIT_SUCCESS;
 }
