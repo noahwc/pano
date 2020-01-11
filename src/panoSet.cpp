@@ -21,6 +21,12 @@ int panoSet::loadImages(std::vector<std::string> filenames){
 }
 
 int panoSet::stitch(){
+    std::cout << "Stitch in progress." << std::endl;
+    cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::Mode::PANORAMA);
+    cv::Stitcher::Status status = stitcher->stitch(panoSet::images, panoSet::pano);
+    if (status != cv::Stitcher::OK){
+        return 1;
+    }
     return 0;
 }
 
