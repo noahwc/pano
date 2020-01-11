@@ -24,8 +24,14 @@ int panoSet::stitch(){
     return 0;
 }
 
+int panoSet::loadOutFilename(std::string name){
+    panoSet::output_name = name;
+    return 0;
+}
+
 int panoSet::loadOutPath(std::string path){
     panoSet::output_location = path;
+    return 0;
 }
 
 std::string panoSet::getOutLocation(){
@@ -33,5 +39,7 @@ std::string panoSet::getOutLocation(){
 }
 
 int panoSet::exportPano(){
+    panoSet::pano.convertTo(panoSet::pano, CV_16U);
+    cv::imwrite(panoSet::output_location, panoSet::pano);
     return 0;
 }
