@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-
 #include "../include/panoSet.hpp"
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 
 
 panoSet::panoSet(){
@@ -30,13 +32,8 @@ int panoSet::stitch(){
     return 0;
 }
 
-int panoSet::loadOutFilename(std::string name){
+int panoSet::loadOutFile(std::string name){
     panoSet::output_name = name;
-    return 0;
-}
-
-int panoSet::loadOutPath(std::string path){
-    panoSet::output_location = path;
     return 0;
 }
 
@@ -44,8 +41,14 @@ std::string panoSet::getOutLocation(){
     return panoSet::output_location;
 }
 
-int panoSet::exportPano(){
-    panoSet::pano.convertTo(panoSet::pano, CV_16U);
-    cv::imwrite(panoSet::output_location, panoSet::pano);
+int panoSet::exportPano(bool display_result){
+    cv::imwrite(panoSet::output_location + panoSet::output_name, panoSet::pano);
+
+    if(display_result){
+        cv::namedWindow( "Stitched Panorama", cv::WINDOW_AUTOSIZE );
+        cv::imshow( "Stitched Panorama", panoSet::pano );
+        cv::waitKey(0);
+    }
+
     return 0;
 }

@@ -5,7 +5,6 @@
 #include <string>
 #include <filesystem>
 #include "include/panoSet.hpp"
-
 #include <opencv2/opencv.hpp>
 
 
@@ -27,9 +26,10 @@ int main(int argc, char** argv )
     for(int i = 1; i < argc; i++){
         if(argv[i][0] == '-'){
             std::string flag = argv[i];
+            i++;
             while(i < argc){
                 args[flag].push_back(argv[i]);
-                if(++i < argc && argv[i][0] != '-'){ // Check if at the next flag.
+                if(++i < argc && argv[i][0] == '-'){ // Check if at the next flag.
                     i--;
                     break;
                 }
@@ -37,20 +37,19 @@ int main(int argc, char** argv )
         }
     }
 
+    if(!args.count("--path")){
+        args["--path"].push_back("./");
+    }
+
+    if(!args.count("--name")){
+        args["--name"].push_back("pano");
+    }
+    current_pano.loadOutFile(fixNameCollision(args["--name"][0], args["--path"][0]));
+
     if(current_pano.loadImages(args["--images"]) == -1){
         std::cout << "Failed to load image(s)";
         return EXIT_FAILURE;
     }
-
-    if(!args.count("--path")){
-        args["--path"].push_back("./");
-    }
-    current_pano.loadOutPath(args["--path"][0]);
-
-    if(!args.count("--name")){
-        args["--name"].push_back("pano.tiff");
-    }
-    current_pano.loadOutFilename(fixNameCollision(args["--name"][0], args["--path"][0]));
 
     int stitch_result = current_pano.stitch();
     if(stitch_result){
@@ -58,8 +57,8 @@ int main(int argc, char** argv )
         return EXIT_FAILURE;
     }
 
-    int export_result = current_pano.exportPano();
-    if(!export_result){
+    int export_result = current_pano.exportPano(args.count("--display"));
+    if(export_result){
         std::cout << "Failed export image with error: " << export_result << std::endl;
         return EXIT_FAILURE;
     }

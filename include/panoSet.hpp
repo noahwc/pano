@@ -15,8 +15,7 @@ class panoSet{
         panoSet();
         int loadImages(std::vector<std::string> filenames);
         int stitch();
-        int loadOutPath(std::string path);
-        int exportPano();
-        int loadOutFilename(std::string name);
+        int exportPano(bool display_result);
+        int loadOutFile(std::string name);
         std::string getOutLocation();
 };
