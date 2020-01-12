@@ -13,7 +13,7 @@ std::string fixNameCollision(std::string filename, std::string path){
     for(int i = 0; std::filesystem::exists(path + filename + postfix + ".tiff"); i++){
         postfix = std::to_string(i + 1);
     }
-    return path + filename + postfix + ".tiff";
+    return path + std::filesystem::path::preferred_separator + filename + postfix + ".tiff";
 }
 
 int main(int argc, char** argv )
@@ -38,12 +38,13 @@ int main(int argc, char** argv )
     }
 
     if(!args.count("--path")){
-        args["--path"].push_back("./");
+        args["--path"].push_back(std::filesystem::current_path());
     }
 
     if(!args.count("--name")){
         args["--name"].push_back("pano");
     }
+
     current_pano.loadOutFile(fixNameCollision(args["--name"][0], args["--path"][0]));
 
     if(current_pano.loadImages(args["--images"]) == -1){
