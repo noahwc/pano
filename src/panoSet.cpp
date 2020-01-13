@@ -38,11 +38,11 @@ int panoSet::loadOutFile(std::string name){
 }
 
 std::string panoSet::getOutLocation(){
-    return panoSet::output_location;
+    return panoSet::output_name;
 }
 
 int panoSet::exportPano(bool display_result){
-    cv::imwrite(panoSet::output_location + panoSet::output_name, panoSet::pano);
+    cv::imwrite(panoSet::output_name, panoSet::pano);
 
     if(display_result){
         cv::namedWindow( "Stitched Panorama", cv::WINDOW_AUTOSIZE );

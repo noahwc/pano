@@ -7,7 +7,6 @@
 
 class panoSet{
     private:
-        std::string output_location;
         std::string output_name;
         std::vector<cv::Mat> images;
         cv::Mat pano;
